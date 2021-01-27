@@ -1,97 +1,432 @@
 <template>
   <v-container>
-    <v-row class="text-center">
-      <v-col class="mb-4">
-        <h1 class="display-2 font-weight-bold mb-3">
-          Welcome to Vuetify
-        </h1>
+    <v-row>
+      <v-col class="mb-10">
+        Text Editor
+        <br />
+        <v-btn @click="addNew" color="primary">Content </v-btn>
+        <v-btn @click="addImage" color="primary">Image </v-btn>
 
-        <p class="subheading font-weight-regular">
-          For help and collaboration with other Vuetify developers,
-          <br />please join our online
-          <a href="https://community.vuetifyjs.com" target="_blank"
-            >Discord Community</a
-          >
-        </p>
+        <br />
+        <div v-for="(block, idx) in content" :key="idx" class="mt-5">
+          <!-- <strong>{{ block.title }}</strong> -->
+          <br />
+          <!-- <v-text-field
+            name="name"
+            label="Title"
+            :value="content[idx].title"
+            single-line
+          ></v-text-field> -->
+
+          <input
+            class="titleEditable"
+            v-model="block.title"
+            placeholder="Title"
+          />
+          <!-- <vue-editor v-model="content[idx].body"></vue-editor> -->
+          <!-- vue-editor docs: https://www.npmjs.com/package/vue2-editor -->
+          <div v-if="block.imageContent">
+            <div class="my-8">
+              <image-uploader
+                :preview="true"
+                :className="[
+                  'fileinput',
+                  { 'fileinput--loaded': content[idx].hasImage },
+                ]"
+                capture="environment"
+                :debug="1"
+                doNotResize="gif"
+                :autoRotate="true"
+                outputFormat="verbose"
+                @input="setImage($event, idx)"
+                :id="idx.toString()"
+              >
+                <label :for="idx" slot="upload-label">
+                  <figure>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="32"
+                      height="32"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        class="path1"
+                        d="M9.5 19c0 3.59 2.91 6.5 6.5 6.5s6.5-2.91 6.5-6.5-2.91-6.5-6.5-6.5-6.5 2.91-6.5 6.5zM30 8h-7c-0.5-2-1-4-3-4h-8c-2 0-2.5 2-3 4h-7c-1.1 0-2 0.9-2 2v18c0 1.1 0.9 2 2 2h28c1.1 0 2-0.9 2-2v-18c0-1.1-0.9-2-2-2zM16 27.875c-4.902 0-8.875-3.973-8.875-8.875s3.973-8.875 8.875-8.875c4.902 0 8.875 3.973 8.875 8.875s-3.973 8.875-8.875 8.875zM30 14h-4v-2h4v2z"
+                      ></path>
+                    </svg>
+                  </figure>
+                  <span class="upload-caption">{{
+                    content[idx].hasImage ? "Replace" : "Click to upload"
+                  }}</span>
+                </label>
+              </image-uploader>
+            </div>
+          </div>
+          <div v-if="!block.imageContent">
+            <editor-menu-bar
+              :editor="block.editor"
+              v-slot="{ commands, isActive, focused }"
+            >
+              <div class="menubar is-hidden" :class="{ 'is-focused': focused }">
+                <v-btn
+                  text
+                  class="menubar__v-btn"
+                  :class="{ 'is-active': isActive.bold() }"
+                  @click="commands.bold"
+                >
+                  b
+                </v-btn>
+
+                <v-btn
+                  text
+                  class="menubar__v-btn"
+                  :class="{ 'is-active': isActive.italic() }"
+                  @click="commands.italic"
+                >
+                  i
+                </v-btn>
+
+                <v-btn
+                  text
+                  class="menubar__v-btn"
+                  :class="{ 'is-active': isActive.strike() }"
+                  @click="commands.strike"
+                >
+                  strike
+                </v-btn>
+
+                <v-btn
+                  text
+                  class="menubar__v-btn"
+                  :class="{ 'is-active': isActive.underline() }"
+                  @click="commands.underline"
+                >
+                  u
+                </v-btn>
+
+                <v-btn
+                  text
+                  class="menubar__v-btn"
+                  :class="{ 'is-active': isActive.code() }"
+                  @click="commands.code"
+                >
+                  code
+                </v-btn>
+
+                <v-btn
+                  text
+                  class="menubar__v-btn"
+                  :class="{ 'is-active': isActive.heading({ level: 1 }) }"
+                  @click="commands.heading({ level: 1 })"
+                >
+                  H1
+                </v-btn>
+
+                <v-btn
+                  text
+                  class="menubar__v-btn"
+                  :class="{ 'is-active': isActive.heading({ level: 2 }) }"
+                  @click="commands.heading({ level: 2 })"
+                >
+                  H2
+                </v-btn>
+
+                <v-btn
+                  text
+                  class="menubar__v-btn"
+                  :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+                  @click="commands.heading({ level: 3 })"
+                >
+                  H3
+                </v-btn>
+
+                <v-btn
+                  text
+                  class="menubar__v-btn"
+                  :class="{ 'is-active': isActive.bullet_list() }"
+                  @click="commands.bullet_list"
+                >
+                  ul
+                </v-btn>
+
+                <v-btn
+                  text
+                  class="menubar__v-btn"
+                  :class="{ 'is-active': isActive.ordered_list() }"
+                  @click="commands.ordered_list"
+                >
+                  ol
+                </v-btn>
+
+                <v-btn
+                  text
+                  class="menubar__v-btn"
+                  :class="{ 'is-active': isActive.blockquote() }"
+                  @click="commands.blockquote"
+                >
+                  q
+                </v-btn>
+
+                <v-btn
+                  text
+                  class="menubar__v-btn"
+                  :class="{ 'is-active': isActive.code_block() }"
+                  @click="commands.code_block"
+                >
+                  c b
+                </v-btn>
+              </div>
+            </editor-menu-bar>
+
+            <editor-content class="editor__content" :editor="block.editor" />
+          </div>
+
+          <!-- Editor menu bar: -->
+          <div>
+            <!-- <editor-menu-bar
+              :editor="block.editor"
+              v-slot="{ commands, isActive }"
+            >
+              <v-btn
+                :class="{ 'is-active': isActive.bold() }"
+                @click="commands.bold"
+              >
+                B
+              </v-btn>
+            </editor-menu-bar>
+            <editor-content :editor="block.editor" /> -->
+          </div>
+          <!-- <div class="my-8">
+            <image-uploader
+              :preview="true"
+              :className="['fileinput', { 'fileinput--loaded': hasImage }]"
+              capture="environment"
+              :debug="1"
+              doNotResize="gif"
+              :autoRotate="true"
+              outputFormat="verbose"
+              @input="setImage"
+            >
+              <label for="fileInput" slot="upload-label">
+                <figure>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="32"
+                    height="32"
+                    viewBox="0 0 32 32"
+                  >
+                    <path
+                      class="path1"
+                      d="M9.5 19c0 3.59 2.91 6.5 6.5 6.5s6.5-2.91 6.5-6.5-2.91-6.5-6.5-6.5-6.5 2.91-6.5 6.5zM30 8h-7c-0.5-2-1-4-3-4h-8c-2 0-2.5 2-3 4h-7c-1.1 0-2 0.9-2 2v18c0 1.1 0.9 2 2 2h28c1.1 0 2-0.9 2-2v-18c0-1.1-0.9-2-2-2zM16 27.875c-4.902 0-8.875-3.973-8.875-8.875s3.973-8.875 8.875-8.875c4.902 0 8.875 3.973 8.875 8.875s-3.973 8.875-8.875 8.875zM30 14h-4v-2h4v2z"
+                    ></path>
+                  </svg>
+                </figure>
+                <span class="upload-caption">{{
+                  hasImage ? "Replace" : "Click to upload"
+                }}</span>
+              </label>
+            </image-uploader>
+          </div> -->
+          <!-- 
+          {{ block.body }} -->
+          <!-- <hr />
+          <div v-html="block.body"></div> -->
+        </div>
       </v-col>
-
-      <v-col class="mb-5" cols="12">
-        <h2 class="headline font-weight-bold mb-3">
-          What's next?
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(next, i) in whatsNext"
-            :key="i"
-            :href="next.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ next.text }}
-          </a>
-        </v-row>
+      <hr />
+      <v-col>
+        <!-- <editor-content :editor="editor" /> -->
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
+import { VueEditor } from "vue2-editor";
+// import { Editor, EditorContent } from "tiptap";
+import { Editor, EditorContent, EditorMenuBar } from "tiptap";
+import {
+  Blockquote,
+  BulletList,
+  CodeBlock,
+  HardBreak,
+  Heading,
+  ListItem,
+  OrderedList,
+  TodoItem,
+  TodoList,
+  Bold,
+  Code,
+  Italic,
+  Link,
+  Strike,
+  Underline,
+  History,
+  Focus,
+  Placeholder,
+} from "tiptap-extensions";
 export default {
   name: "HelloWorld",
 
+  components: {
+    VueEditor,
+    EditorContent,
+    EditorMenuBar,
+  },
+
   data: () => ({
-    ecosystem: [
+    // hasImage: false,
+    // image: null,
+
+    content: [
       {
-        text: "vuetify-loader",
-        href: "https://github.com/vuetifyjs/vuetify-loader",
-      },
-      {
-        text: "github",
-        href: "https://github.com/vuetifyjs/vuetify",
-      },
-      {
-        text: "awesome-vuetify",
-        href: "https://github.com/vuetifyjs/awesome-vuetify",
-      },
-    ],
-    importantLinks: [
-      {
-        text: "Documentation",
-        href: "https://vuetifyjs.com",
-      },
-      {
-        text: "Chat",
-        href: "https://community.vuetifyjs.com",
-      },
-      {
-        text: "Made with Vuetify",
-        href: "https://madewithvuejs.com/vuetify",
-      },
-      {
-        text: "Twitter",
-        href: "https://twitter.com/vuetifyjs",
-      },
-      {
-        text: "Articles",
-        href: "https://medium.com/vuetify",
+        title: "first block",
+        editor: new Editor({
+          content: `<p>Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface`,
+          extensions: [
+            new Blockquote(),
+            new BulletList(),
+            new CodeBlock(),
+            new HardBreak(),
+            new Heading({ levels: [1, 2, 3] }),
+            new ListItem(),
+            new OrderedList(),
+            new TodoItem(),
+            new TodoList(),
+            new Link(),
+            new Bold(),
+            new Code(),
+            new Italic(),
+            new Strike(),
+            new Underline(),
+            new History(),
+            new Focus({
+              className: "has-focus",
+            }),
+          ],
+        }),
+        imageContent: false,
+        body: `<p>Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.</p><p>Hola</p>`,
       },
     ],
-    whatsNext: [
-      {
-        text: "Explore components",
-        href: "https://vuetifyjs.com/components/api-explorer",
-      },
-      {
-        text: "Select a layout",
-        href: "https://vuetifyjs.com/getting-started/pre-made-layouts",
-      },
-      {
-        text: "Frequently Asked Questions",
-        href:
-          "https://vuetifyjs.com/getting-started/frequently-asked-questions",
-      },
-    ],
+    content_editor: "<h1>Some initial content</h1>",
   }),
+
+  methods: {
+    showIdx(idx) {
+      alert(idx);
+    },
+    addImage() {
+      this.content.push({
+        title: "",
+        body: "",
+        editor: null,
+        imageContent: true,
+        hasImage: false,
+        image: null,
+      });
+    },
+    setImage: function(output, idx) {
+      console.log("output", output);
+      console.log("idx", idx);
+      // this.hasImage = true;
+      // this.image = output;
+      console.log("Info", output.info);
+      console.log("Exif", output.exif);
+      this.content[idx].hasImage = true;
+      this.content[idx].image = output;
+      console.log("cpmtwmt", this.content);
+      console.log("this.content[idx].", this.content[idx]);
+      console.log("his.content[idx].hasImage", this.content[idx].hasImage);
+    },
+    addNew() {
+      this.content.push({
+        title: "",
+        body: "",
+        editor: new Editor({
+          content: "Write something",
+          extensions: [
+            new Blockquote(),
+            new BulletList(),
+            new CodeBlock(),
+            new HardBreak(),
+            new Heading({ levels: [1, 2, 3] }),
+            new ListItem(),
+            new OrderedList(),
+            new TodoItem(),
+            new TodoList(),
+            new Link(),
+            new Bold(),
+            new Code(),
+            new Italic(),
+            new Strike(),
+            new Underline(),
+            new History(),
+            new Focus({
+              className: "has-focus",
+            }),
+            new Placeholder({
+              emptyNodeText: (node) => {
+                return "Placeholder text";
+              },
+            }),
+          ],
+        }),
+      });
+    },
+  },
 };
 </script>
+
+<style>
+.menubar {
+  margin-bottom: 1rem;
+  -webkit-transition: visibility 0.2s 0.4s, opacity 0.2s 0.4s;
+  transition: visibility 0.2s 0.4s, opacity 0.2s 0.4s;
+}
+
+.menubar.is-hidden {
+  /* visibility: hidden; */
+  /* opacity: 0; */
+  display: none;
+}
+
+/* .menubar.is-hidden {
+  visibility: visible;
+  opacity: 1;
+} */
+
+/* .is-hidden {
+  visibility: visible;
+  opacity: 1;
+} */
+
+.is-focused {
+  display: block !important;
+  opacity: 1;
+  visibility: visible;
+}
+
+.is-active {
+  font-weight: 900 !important;
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+.ProseMirror {
+  padding: 15px !important;
+}
+
+#fileInput {
+  display: none;
+}
+
+.fileinput {
+  display: none;
+}
+
+.titleEditable {
+  font-size: 25px;
+  font-weight: 800;
+  width: 100%;
+}
+</style>
