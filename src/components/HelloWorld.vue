@@ -9,234 +9,189 @@
 
         <br />
         <div v-for="(block, idx) in content" :key="idx" class="mt-5">
-          <!-- <strong>{{ block.title }}</strong> -->
-          <br />
-          <!-- <v-text-field
-            name="name"
-            label="Title"
-            :value="content[idx].title"
-            single-line
-          ></v-text-field> -->
-
-          <input
-            class="titleEditable"
-            v-model="block.title"
-            placeholder="Title"
-          />
-          <!-- <vue-editor v-model="content[idx].body"></vue-editor> -->
-          <!-- vue-editor docs: https://www.npmjs.com/package/vue2-editor -->
-          <div v-if="block.imageContent">
-            <div class="my-8">
-              <image-uploader
-                :preview="true"
-                :className="[
-                  'fileinput',
-                  { 'fileinput--loaded': content[idx].hasImage },
-                ]"
-                capture="environment"
-                :debug="1"
-                doNotResize="gif"
-                :autoRotate="true"
-                outputFormat="verbose"
-                @input="setImage($event, idx)"
-                :id="idx.toString()"
-              >
-                <label :for="idx" slot="upload-label">
-                  <figure>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="32"
-                      height="32"
-                      viewBox="0 0 32 32"
-                    >
-                      <path
-                        class="path1"
-                        d="M9.5 19c0 3.59 2.91 6.5 6.5 6.5s6.5-2.91 6.5-6.5-2.91-6.5-6.5-6.5-6.5 2.91-6.5 6.5zM30 8h-7c-0.5-2-1-4-3-4h-8c-2 0-2.5 2-3 4h-7c-1.1 0-2 0.9-2 2v18c0 1.1 0.9 2 2 2h28c1.1 0 2-0.9 2-2v-18c0-1.1-0.9-2-2-2zM16 27.875c-4.902 0-8.875-3.973-8.875-8.875s3.973-8.875 8.875-8.875c4.902 0 8.875 3.973 8.875 8.875s-3.973 8.875-8.875 8.875zM30 14h-4v-2h4v2z"
-                      ></path>
-                    </svg>
-                  </figure>
-                  <span class="upload-caption">{{
-                    content[idx].hasImage ? "Replace" : "Click to upload"
-                  }}</span>
-                </label>
-              </image-uploader>
-            </div>
-          </div>
-          <div v-if="!block.imageContent">
-            <editor-menu-bar
-              :editor="block.editor"
-              v-slot="{ commands, isActive, focused }"
-            >
-              <div class="menubar is-hidden" :class="{ 'is-focused': focused }">
-                <v-btn
-                  text
-                  class="menubar__v-btn"
-                  :class="{ 'is-active': isActive.bold() }"
-                  @click="commands.bold"
+          <div class="">
+            <br />
+            <input
+              class="titleEditable"
+              v-model="block.title"
+              placeholder="Title"
+            />
+            <!-- <vue-editor v-model="content[idx].body"></vue-editor> -->
+            <!-- vue-editor docs: https://www.npmjs.com/package/vue2-editor -->
+            <div v-if="block.imageContent">
+              <div class="my-8">
+                <image-uploader
+                  :preview="true"
+                  :className="[
+                    'fileinput',
+                    { 'fileinput--loaded': content[idx].hasImage },
+                  ]"
+                  capture="environment"
+                  :debug="1"
+                  doNotResize="gif"
+                  :autoRotate="true"
+                  outputFormat="verbose"
+                  @input="setImage($event, idx)"
+                  :id="idx.toString()"
                 >
-                  b
-                </v-btn>
-
-                <v-btn
-                  text
-                  class="menubar__v-btn"
-                  :class="{ 'is-active': isActive.italic() }"
-                  @click="commands.italic"
-                >
-                  i
-                </v-btn>
-
-                <v-btn
-                  text
-                  class="menubar__v-btn"
-                  :class="{ 'is-active': isActive.strike() }"
-                  @click="commands.strike"
-                >
-                  strike
-                </v-btn>
-
-                <v-btn
-                  text
-                  class="menubar__v-btn"
-                  :class="{ 'is-active': isActive.underline() }"
-                  @click="commands.underline"
-                >
-                  u
-                </v-btn>
-
-                <v-btn
-                  text
-                  class="menubar__v-btn"
-                  :class="{ 'is-active': isActive.code() }"
-                  @click="commands.code"
-                >
-                  code
-                </v-btn>
-
-                <v-btn
-                  text
-                  class="menubar__v-btn"
-                  :class="{ 'is-active': isActive.heading({ level: 1 }) }"
-                  @click="commands.heading({ level: 1 })"
-                >
-                  H1
-                </v-btn>
-
-                <v-btn
-                  text
-                  class="menubar__v-btn"
-                  :class="{ 'is-active': isActive.heading({ level: 2 }) }"
-                  @click="commands.heading({ level: 2 })"
-                >
-                  H2
-                </v-btn>
-
-                <v-btn
-                  text
-                  class="menubar__v-btn"
-                  :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-                  @click="commands.heading({ level: 3 })"
-                >
-                  H3
-                </v-btn>
-
-                <v-btn
-                  text
-                  class="menubar__v-btn"
-                  :class="{ 'is-active': isActive.bullet_list() }"
-                  @click="commands.bullet_list"
-                >
-                  ul
-                </v-btn>
-
-                <v-btn
-                  text
-                  class="menubar__v-btn"
-                  :class="{ 'is-active': isActive.ordered_list() }"
-                  @click="commands.ordered_list"
-                >
-                  ol
-                </v-btn>
-
-                <v-btn
-                  text
-                  class="menubar__v-btn"
-                  :class="{ 'is-active': isActive.blockquote() }"
-                  @click="commands.blockquote"
-                >
-                  q
-                </v-btn>
-
-                <v-btn
-                  text
-                  class="menubar__v-btn"
-                  :class="{ 'is-active': isActive.code_block() }"
-                  @click="commands.code_block"
-                >
-                  c b
-                </v-btn>
+                  <label :for="idx" slot="upload-label">
+                    <figure>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="32"
+                        height="32"
+                        viewBox="0 0 32 32"
+                      >
+                        <path
+                          class="path1"
+                          d="M9.5 19c0 3.59 2.91 6.5 6.5 6.5s6.5-2.91 6.5-6.5-2.91-6.5-6.5-6.5-6.5 2.91-6.5 6.5zM30 8h-7c-0.5-2-1-4-3-4h-8c-2 0-2.5 2-3 4h-7c-1.1 0-2 0.9-2 2v18c0 1.1 0.9 2 2 2h28c1.1 0 2-0.9 2-2v-18c0-1.1-0.9-2-2-2zM16 27.875c-4.902 0-8.875-3.973-8.875-8.875s3.973-8.875 8.875-8.875c4.902 0 8.875 3.973 8.875 8.875s-3.973 8.875-8.875 8.875zM30 14h-4v-2h4v2z"
+                        ></path>
+                      </svg>
+                    </figure>
+                    <span class="upload-caption">{{
+                      content[idx].hasImage ? "Replace" : "Click to upload"
+                    }}</span>
+                  </label>
+                </image-uploader>
               </div>
-            </editor-menu-bar>
-
-            <editor-content class="editor__content" :editor="block.editor" />
-          </div>
-
-          <!-- Editor menu bar: -->
-          <div>
-            <!-- <editor-menu-bar
-              :editor="block.editor"
-              v-slot="{ commands, isActive }"
-            >
-              <v-btn
-                :class="{ 'is-active': isActive.bold() }"
-                @click="commands.bold"
+            </div>
+            <div v-if="!block.imageContent">
+              <editor-menu-bar
+                :editor="block.editor"
+                v-slot="{ commands, isActive, focused }"
               >
-                B
-              </v-btn>
-            </editor-menu-bar>
-            <editor-content :editor="block.editor" /> -->
-          </div>
-          <!-- <div class="my-8">
-            <image-uploader
-              :preview="true"
-              :className="['fileinput', { 'fileinput--loaded': hasImage }]"
-              capture="environment"
-              :debug="1"
-              doNotResize="gif"
-              :autoRotate="true"
-              outputFormat="verbose"
-              @input="setImage"
-            >
-              <label for="fileInput" slot="upload-label">
-                <figure>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="32"
-                    height="32"
-                    viewBox="0 0 32 32"
+                <div
+                  class="menubar is-hidden"
+                  :class="{ 'is-focused': focused }"
+                >
+                  <v-btn
+                    text
+                    class="menubar__v-btn"
+                    :class="{ 'is-active': isActive.bold() }"
+                    @click="commands.bold"
                   >
-                    <path
-                      class="path1"
-                      d="M9.5 19c0 3.59 2.91 6.5 6.5 6.5s6.5-2.91 6.5-6.5-2.91-6.5-6.5-6.5-6.5 2.91-6.5 6.5zM30 8h-7c-0.5-2-1-4-3-4h-8c-2 0-2.5 2-3 4h-7c-1.1 0-2 0.9-2 2v18c0 1.1 0.9 2 2 2h28c1.1 0 2-0.9 2-2v-18c0-1.1-0.9-2-2-2zM16 27.875c-4.902 0-8.875-3.973-8.875-8.875s3.973-8.875 8.875-8.875c4.902 0 8.875 3.973 8.875 8.875s-3.973 8.875-8.875 8.875zM30 14h-4v-2h4v2z"
-                    ></path>
-                  </svg>
-                </figure>
-                <span class="upload-caption">{{
-                  hasImage ? "Replace" : "Click to upload"
-                }}</span>
-              </label>
-            </image-uploader>
-          </div> -->
-          <!-- 
-          {{ block.body }} -->
-          <!-- <hr />
-          <div v-html="block.body"></div> -->
+                    b
+                  </v-btn>
+
+                  <v-btn
+                    text
+                    class="menubar__v-btn"
+                    :class="{ 'is-active': isActive.italic() }"
+                    @click="commands.italic"
+                  >
+                    i
+                  </v-btn>
+
+                  <v-btn
+                    text
+                    class="menubar__v-btn"
+                    :class="{ 'is-active': isActive.strike() }"
+                    @click="commands.strike"
+                  >
+                    strike
+                  </v-btn>
+
+                  <v-btn
+                    text
+                    class="menubar__v-btn"
+                    :class="{ 'is-active': isActive.underline() }"
+                    @click="commands.underline"
+                  >
+                    u
+                  </v-btn>
+
+                  <v-btn
+                    text
+                    class="menubar__v-btn"
+                    :class="{ 'is-active': isActive.code() }"
+                    @click="commands.code"
+                  >
+                    code
+                  </v-btn>
+
+                  <v-btn
+                    text
+                    class="menubar__v-btn"
+                    :class="{ 'is-active': isActive.heading({ level: 1 }) }"
+                    @click="commands.heading({ level: 1 })"
+                  >
+                    H1
+                  </v-btn>
+
+                  <v-btn
+                    text
+                    class="menubar__v-btn"
+                    :class="{ 'is-active': isActive.heading({ level: 2 }) }"
+                    @click="commands.heading({ level: 2 })"
+                  >
+                    H2
+                  </v-btn>
+
+                  <v-btn
+                    text
+                    class="menubar__v-btn"
+                    :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+                    @click="commands.heading({ level: 3 })"
+                  >
+                    H3
+                  </v-btn>
+
+                  <v-btn
+                    text
+                    class="menubar__v-btn"
+                    :class="{ 'is-active': isActive.bullet_list() }"
+                    @click="commands.bullet_list"
+                  >
+                    ul
+                  </v-btn>
+
+                  <v-btn
+                    text
+                    class="menubar__v-btn"
+                    :class="{ 'is-active': isActive.ordered_list() }"
+                    @click="commands.ordered_list"
+                  >
+                    ol
+                  </v-btn>
+
+                  <v-btn
+                    text
+                    class="menubar__v-btn"
+                    :class="{ 'is-active': isActive.blockquote() }"
+                    @click="commands.blockquote"
+                  >
+                    q
+                  </v-btn>
+
+                  <v-btn
+                    text
+                    class="menubar__v-btn"
+                    :class="{ 'is-active': isActive.code_block() }"
+                    @click="commands.code_block"
+                  >
+                    c b
+                  </v-btn>
+                </div>
+              </editor-menu-bar>
+
+              <editor-content class="editor__content" :editor="block.editor" />
+            </div>
+
+            <!-- Editor menu bar: -->
+            <v-btn
+              @click="deleteBlock(idx)"
+              style="float: right"
+              text
+              rounded
+              small
+              color="gray"
+              ><v-icon small>delete</v-icon>
+            </v-btn>
+          </div>
         </div>
       </v-col>
       <hr />
-      <v-col>
-        <!-- <editor-content :editor="editor" /> -->
-      </v-col>
+      <v-col> </v-col>
     </v-row>
   </v-container>
 </template>
@@ -327,17 +282,15 @@ export default {
       });
     },
     setImage: function(output, idx) {
-      console.log("output", output);
-      console.log("idx", idx);
-      // this.hasImage = true;
-      // this.image = output;
-      console.log("Info", output.info);
-      console.log("Exif", output.exif);
       this.content[idx].hasImage = true;
       this.content[idx].image = output;
-      console.log("cpmtwmt", this.content);
-      console.log("this.content[idx].", this.content[idx]);
-      console.log("his.content[idx].hasImage", this.content[idx].hasImage);
+    },
+    deleteBlock(idx) {
+      if (this.content[idx].editor !== null) {
+        this.content[idx].editor.destroy();
+      }
+      this.content.splice(idx, 1);
+      this.content = [...this.content];
     },
     addNew() {
       this.content.push({

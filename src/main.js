@@ -6,6 +6,7 @@ import vuetify from "./plugins/vuetify";
 import ImageUploader from "vue-image-upload-resize";
 
 Vue.use(ImageUploader);
+import "material-design-icons-iconfont/dist/material-design-icons.css";
 
 Vue.config.productionTip = false;
 
