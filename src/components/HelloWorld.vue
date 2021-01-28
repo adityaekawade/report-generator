@@ -4,12 +4,13 @@
       <v-col class="mb-10" cols="12" md="12" lg="12">
         <br />
         <v-row align="center" justify="space-around">
-          <v-btn text @click="addNew"> <v-icon>add</v-icon> Content </v-btn>
+          <!-- <v-btn text @click="addNew"> <v-icon>add</v-icon> Content </v-btn>
           <v-btn text @click="addImage"> <v-icon>add</v-icon> Image </v-btn>
           <v-btn text @click="addEmbed"> <v-icon>add</v-icon> Embed </v-btn>
           <v-btn text @click="addCodeBlock">
             <v-icon>add</v-icon> Code block
-          </v-btn>
+          </v-btn> -->
+          <v-spacer></v-spacer>
           <v-btn text @click="publish"> <v-icon>save</v-icon> Publish </v-btn>
         </v-row>
 
@@ -262,6 +263,8 @@ import {
 import javascript from "highlight.js/lib/languages/javascript";
 import css from "highlight.js/lib/languages/css";
 
+import { bus } from "../main";
+
 export default {
   name: "HelloWorld",
 
@@ -271,9 +274,30 @@ export default {
     EditorMenuBar,
   },
 
+  mounted() {
+    bus.$on("addNew", (type) => {
+      console.log("type", type);
+      if (type === "content") {
+        this.addNew();
+      } else if (type === "image") {
+        this.addImage();
+      } else if (type === "embed") {
+        this.addEmbed();
+      } else if (type === "codeblock") {
+        this.addCodeBlock();
+      }
+    });
+  },
+
   data: () => ({
     // hasImage: false,
     // image: null,
+    items: [
+      { title: "Dashboard", icon: "mdi-view-dashboard" },
+      { title: "Photos", icon: "mdi-image" },
+      { title: "About", icon: "mdi-help-box" },
+    ],
+    right: null,
     draftMode: true,
     mouseOverIdx: null,
     content: [

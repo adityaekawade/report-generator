@@ -8,6 +8,8 @@ import ImageUploader from "vue-image-upload-resize";
 Vue.use(ImageUploader);
 import "material-design-icons-iconfont/dist/material-design-icons.css";
 
+export const bus = new Vue();
+
 Vue.config.productionTip = false;
 
 new Vue({
