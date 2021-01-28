@@ -7,7 +7,9 @@
           <v-btn text @click="addNew"> <v-icon>add</v-icon> Content </v-btn>
           <v-btn text @click="addImage"> <v-icon>add</v-icon> Image </v-btn>
           <v-btn text @click="addEmbed"> <v-icon>add</v-icon> Embed </v-btn>
-
+          <v-btn text @click="addCodeBlock">
+            <v-icon>add</v-icon> Code block
+          </v-btn>
           <v-btn text @click="publish"> <v-icon>save</v-icon> Publish </v-btn>
         </v-row>
 
@@ -33,6 +35,14 @@
               </div>
               <!-- <vue-editor v-model="content[idx].body"></vue-editor> -->
               <!-- vue-editor docs: https://www.npmjs.com/package/vue2-editor -->
+              <div v-if="block.codeEditorBlock">
+                <div class="editor">
+                  <editor-content
+                    class="editor__content"
+                    :editor="block.codeEditor"
+                  />
+                </div>
+              </div>
 
               <div v-if="block.embedBlock">
                 <div
@@ -246,7 +256,12 @@ import {
   History,
   Focus,
   Placeholder,
+  CodeBlockHighlight,
 } from "tiptap-extensions";
+
+import javascript from "highlight.js/lib/languages/javascript";
+import css from "highlight.js/lib/languages/css";
+
 export default {
   name: "HelloWorld",
 
@@ -341,6 +356,41 @@ export default {
         embedBlock: true,
         embedContent: ``,
         modelContent: "",
+      });
+    },
+    addCodeBlock() {
+      this.content.push({
+        codeEditorBlock: true,
+        embedBlock: false,
+        title: "",
+        body: "",
+        modelContent: "",
+        codeEditor: new Editor({
+          extensions: [
+            new CodeBlockHighlight({
+              languages: {
+                javascript,
+                css,
+              },
+            }),
+            new Bold(),
+            new Code(),
+          ],
+          content: `
+            <pre><code>function $initHighlight(block, flags) {
+  try {
+    if (block.className.search(/no-highlight/) != -1)
+      return processBlock(block, true, 0x0F) + ' class=""';
+  } catch (e) {
+    /* handle exception */
+  }
+  for (var i = 0 / 2; i < classes.length; i++) { // "0 / 2" should not be parsed as regexp
+    if (checkCondition(classes[i]) === undefined)
+      return /d+/g;
+  }
+}</code><pre>
+          `,
+        }),
       });
     },
     addNew() {
@@ -448,5 +498,77 @@ export default {
   background-color: rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   padding: 0.3rem 0.5rem;
+}
+
+.editor__content pre {
+  padding: 0.7rem 1rem;
+  border-radius: 5px;
+  background: #000;
+  color: #fff;
+  font-size: 1.2rem;
+  overflow-x: auto;
+}
+
+.img-preview {
+  width: 75% !important;
+}
+</style>
+
+<style lang="scss">
+pre {
+  &::before {
+    content: attr(data-language);
+    text-transform: uppercase;
+    display: block;
+    text-align: right;
+    font-weight: bold;
+    font-size: 0.6rem;
+  }
+  code {
+    .hljs-comment,
+    .hljs-quote {
+      color: #999999;
+    }
+    .hljs-variable,
+    .hljs-template-variable,
+    .hljs-attribute,
+    .hljs-tag,
+    .hljs-name,
+    .hljs-regexp,
+    .hljs-link,
+    .hljs-name,
+    .hljs-selector-id,
+    .hljs-selector-class {
+      color: #f2777a;
+    }
+    .hljs-number,
+    .hljs-meta,
+    .hljs-built_in,
+    .hljs-builtin-name,
+    .hljs-literal,
+    .hljs-type,
+    .hljs-params {
+      color: #f99157;
+    }
+    .hljs-string,
+    .hljs-symbol,
+    .hljs-bullet {
+      color: #99cc99;
+    }
+    .hljs-title,
+    .hljs-section {
+      color: #ffcc66;
+    }
+    .hljs-keyword,
+    .hljs-selector-tag {
+      color: #6699cc;
+    }
+    .hljs-emphasis {
+      font-style: italic;
+    }
+    .hljs-strong {
+      font-weight: 700;
+    }
+  }
 }
 </style>
