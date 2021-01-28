@@ -6,6 +6,8 @@
         <v-row align="center" justify="space-around">
           <v-btn text @click="addNew"> <v-icon>add</v-icon> Content </v-btn>
           <v-btn text @click="addImage"> <v-icon>add</v-icon> Image </v-btn>
+          <v-btn text @click="addEmbed"> <v-icon>add</v-icon> Embed </v-btn>
+
           <v-btn text @click="publish"> <v-icon>save</v-icon> Publish </v-btn>
         </v-row>
 
@@ -31,6 +33,23 @@
               </div>
               <!-- <vue-editor v-model="content[idx].body"></vue-editor> -->
               <!-- vue-editor docs: https://www.npmjs.com/package/vue2-editor -->
+
+              <div v-if="block.embedBlock">
+                <div
+                  v-show="block.embedContent.length"
+                  v-html="block.embedContent"
+                ></div>
+                <div>
+                  <input
+                    type="text"
+                    v-model="block.embedContent"
+                    placeholder="Paste embed content"
+                    v-if="draftMode"
+                    class="iframe__input"
+                  />
+                </div>
+              </div>
+
               <div v-if="block.imageContent">
                 <div class="my-8">
                   <image-uploader
@@ -314,6 +333,16 @@ export default {
       this.content.splice(idx, 1);
       this.content = [...this.content];
     },
+    addEmbed() {
+      this.content.push({
+        title: "",
+        body: "",
+        editor: null,
+        embedBlock: true,
+        embedContent: ``,
+        modelContent: "",
+      });
+    },
     addNew() {
       this.content.push({
         title: "",
@@ -413,5 +442,11 @@ export default {
 .blockDivHover {
   border: 1px dotted #cfcfcf;
   /* border-style: solid; */
+}
+.iframe__input {
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding: 0.3rem 0.5rem;
 }
 </style>
