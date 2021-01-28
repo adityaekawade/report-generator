@@ -5,6 +5,7 @@
     </v-system-bar>
 
     <v-navigation-drawer
+      v-model="drawer"
       app
       style="width: 210px"
       class="pt-4"
@@ -63,7 +64,7 @@ export default {
   },
 
   data: () => ({
-    //
+    drawer: true,
   }),
 
   methods: {

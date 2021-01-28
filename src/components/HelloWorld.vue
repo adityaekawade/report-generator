@@ -104,7 +104,7 @@
                       :class="{ 'is-active': isActive.bold() }"
                       @click="commands.bold"
                     >
-                      b
+                      <v-icon small>format_bold</v-icon>
                     </v-btn>
 
                     <v-btn
@@ -113,7 +113,7 @@
                       :class="{ 'is-active': isActive.italic() }"
                       @click="commands.italic"
                     >
-                      i
+                      <v-icon small>format_italic</v-icon>
                     </v-btn>
 
                     <v-btn
@@ -122,7 +122,7 @@
                       :class="{ 'is-active': isActive.strike() }"
                       @click="commands.strike"
                     >
-                      strike
+                      <v-icon small>format_strikethrough</v-icon>
                     </v-btn>
 
                     <v-btn
@@ -131,7 +131,7 @@
                       :class="{ 'is-active': isActive.underline() }"
                       @click="commands.underline"
                     >
-                      u
+                      <v-icon small>format_underline</v-icon>
                     </v-btn>
 
                     <v-btn
@@ -140,7 +140,7 @@
                       :class="{ 'is-active': isActive.code() }"
                       @click="commands.code"
                     >
-                      code
+                      <v-icon small>code</v-icon>
                     </v-btn>
 
                     <v-btn
@@ -176,7 +176,7 @@
                       :class="{ 'is-active': isActive.bullet_list() }"
                       @click="commands.bullet_list"
                     >
-                      ul
+                      <v-icon small>format_list_bulleted</v-icon>
                     </v-btn>
 
                     <v-btn
@@ -185,26 +185,26 @@
                       :class="{ 'is-active': isActive.ordered_list() }"
                       @click="commands.ordered_list"
                     >
-                      ol
+                      <v-icon small>format_list_numbered</v-icon>
                     </v-btn>
 
-                    <v-btn
+                    <!-- <v-btn
                       text
                       class="menubar__v-btn"
                       :class="{ 'is-active': isActive.blockquote() }"
                       @click="commands.blockquote"
                     >
-                      q
-                    </v-btn>
+                      <v-icon small>format_quote</v-icon>
+                    </v-btn> -->
 
-                    <v-btn
+                    <!-- <v-btn
                       text
                       class="menubar__v-btn"
                       :class="{ 'is-active': isActive.code_block() }"
                       @click="commands.code_block"
                     >
                       c b
-                    </v-btn>
+                    </v-btn> -->
                   </div>
                 </editor-menu-bar>
 
@@ -355,6 +355,7 @@ export default {
         title: "",
         body: "",
         editor: null,
+        codeEditor: null,
         imageContent: true,
         hasImage: false,
         image: null,
@@ -368,6 +369,8 @@ export default {
     deleteBlock(idx) {
       if (this.content[idx].editor !== null) {
         this.content[idx].editor.destroy();
+      } else if (this.content[idx].codeEditor !== null) {
+        this.content[idx].codeEditor.destroy();
       }
       this.content.splice(idx, 1);
       this.content = [...this.content];
@@ -377,6 +380,7 @@ export default {
         title: "",
         body: "",
         editor: null,
+        codeEditor: null,
         embedBlock: true,
         embedContent: ``,
         modelContent: "",
@@ -386,6 +390,7 @@ export default {
       this.content.push({
         codeEditorBlock: true,
         embedBlock: false,
+        editor: null,
         title: "",
         body: "",
         modelContent: "",
@@ -401,18 +406,7 @@ export default {
             new Code(),
           ],
           content: `
-            <pre><code>function $initHighlight(block, flags) {
-  try {
-    if (block.className.search(/no-highlight/) != -1)
-      return processBlock(block, true, 0x0F) + ' class=""';
-  } catch (e) {
-    /* handle exception */
-  }
-  for (var i = 0 / 2; i < classes.length; i++) { // "0 / 2" should not be parsed as regexp
-    if (checkCondition(classes[i]) === undefined)
-      return /d+/g;
-  }
-}</code><pre>
+            <pre><code></code><pre>
           `,
         }),
       });
@@ -422,6 +416,7 @@ export default {
         title: "",
         body: "",
         modelContent: "",
+        codeEditor: null,
         editor: new Editor({
           content: "Write something",
           editable: true,
