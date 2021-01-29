@@ -7,7 +7,7 @@
     <v-navigation-drawer
       v-model="drawer"
       app
-      style="width: 210px"
+      style="width: 225px"
       class="pt-4"
       color="grey lighten-3"
     >
@@ -67,6 +67,12 @@ export default {
     drawer: true,
   }),
 
+  mounted() {
+    bus.$on("draft-mode", (state) => {
+      this.drawer = state;
+    });
+  },
+
   methods: {
     addNew(type) {
       console.log("type in app", type);
@@ -75,3 +81,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.v-application {
+  font-family: "Poppins" !important;
+}
+</style>

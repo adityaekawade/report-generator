@@ -11,7 +11,18 @@
             <v-icon>add</v-icon> Code block
           </v-btn> -->
           <v-spacer></v-spacer>
-          <v-btn text @click="publish"> <v-icon>save</v-icon> Publish </v-btn>
+          <v-btn v-if="draftMode" text @click="publish">
+            <v-icon>save</v-icon> Publish
+          </v-btn>
+          <v-btn v-if="!draftMode" text>
+            <v-icon class="mr-2">mdi-twitter</v-icon> Tweet
+          </v-btn>
+          <v-btn v-if="!draftMode" text>
+            <v-icon class="mr-2">link</v-icon> Get sharable link
+          </v-btn>
+          <v-btn v-if="!draftMode" text @click="setDraftMode">
+            <v-icon class="mr-2">create</v-icon> Draft
+          </v-btn>
         </v-row>
 
         <br />
@@ -28,8 +39,9 @@
               <input
                 class="titleEditable"
                 v-model="block.title"
-                placeholder="Title"
+                placeholder="Heading"
                 v-if="draftMode"
+                style="padding:10px"
               />
               <div v-if="!draftMode" class="titleEditable">
                 {{ block.title }}
@@ -216,6 +228,7 @@
 
               <!-- Editor menu bar: -->
               <v-btn
+                v-if="draftMode"
                 @click="deleteBlock(idx)"
                 style="float: right"
                 text
@@ -349,6 +362,11 @@ export default {
     publish() {
       this.draftMode = false;
       console.log("this.content", this.content);
+      bus.$emit("draft-mode", false);
+    },
+    setDraftMode() {
+      this.draftMode = true;
+      bus.$emit("draft-mode", true);
     },
     addImage() {
       this.content.push({
