@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-system-bar app>
+    <v-system-bar app color="#330433">
       <v-spacer></v-spacer>
     </v-system-bar>
     <div class="text-center" v-if="!writingMode" style="margin-top: 250px">
@@ -17,15 +17,29 @@
     <v-navigation-drawer
       v-model="drawer"
       app
-      style="width: 225px"
+      style="width: 205px"
       class="pt-4"
-      color="grey lighten-3"
+      color="#460e49"
       v-if="writingMode"
     >
       <v-list dense nav>
         <v-list-item>
           <v-list-tile-content>
-            <v-btn text x-large @click="addNew('content')">
+            <v-btn
+              style="color:white; font-size: 20px; font-weight: 600"
+              text
+              x-large
+            >
+              iobio.io
+            </v-btn>
+          </v-list-tile-content>
+        </v-list-item>
+        <!-- <hr /> -->
+        <div style="border-top: 1px solid #aeaeaea6; margin-bottom: 8px"></div>
+        <!-- <v-divider></v-divider> -->
+        <v-list-item>
+          <v-list-tile-content>
+            <v-btn style="color:white" text large @click="addNew('content')">
               <v-icon class="mr-2">article</v-icon> Content
             </v-btn>
           </v-list-tile-content>
@@ -33,7 +47,7 @@
 
         <v-list-item>
           <v-list-tile-content>
-            <v-btn text x-large @click="addNew('image')">
+            <v-btn style="color:white" text large @click="addNew('image')">
               <v-icon class="mr-2">insert_photo</v-icon> Image
             </v-btn>
           </v-list-tile-content>
@@ -41,7 +55,7 @@
 
         <v-list-item>
           <v-list-tile-content>
-            <v-btn text x-large @click="addNew('embed')">
+            <v-btn style="color:white" text large @click="addNew('embed')">
               <v-icon class="mr-2">link</v-icon> Embed
             </v-btn>
           </v-list-tile-content>
@@ -49,7 +63,7 @@
 
         <v-list-item>
           <v-list-tile-content>
-            <v-btn text x-large @click="addNew('codeblock')">
+            <v-btn style="color:white" text large @click="addNew('codeblock')">
               <v-icon class="mr-2">code </v-icon> Code block
             </v-btn>
           </v-list-tile-content>
