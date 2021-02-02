@@ -3,6 +3,16 @@
     <v-system-bar app>
       <v-spacer></v-spacer>
     </v-system-bar>
+    <div class="text-center" v-if="!writingMode" style="margin-top: 250px">
+      <h1 style="font-size: 50px">
+        COMPOSE. PUBLISH. SHARE
+      </h1>
+      <div class="mt-10">
+        <v-btn @click="writingMode = true" color="gray" outlined>
+          <v-icon class="mr-2">create</v-icon>Start composing
+        </v-btn>
+      </div>
+    </div>
 
     <v-navigation-drawer
       v-model="drawer"
@@ -10,6 +20,7 @@
       style="width: 225px"
       class="pt-4"
       color="grey lighten-3"
+      v-if="writingMode"
     >
       <v-list dense nav>
         <v-list-item>
@@ -46,7 +57,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-main>
+    <v-main v-if="writingMode">
       <HelloWorld />
     </v-main>
   </v-app>
@@ -65,6 +76,7 @@ export default {
 
   data: () => ({
     drawer: true,
+    writingMode: false,
   }),
 
   mounted() {
