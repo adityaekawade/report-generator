@@ -12,7 +12,7 @@
           </v-btn> -->
           <v-spacer></v-spacer>
           <v-btn v-if="draftMode" text @click="publish">
-            <v-icon>save</v-icon> Publish
+            <v-icon class="mr-2">save</v-icon> Publish
           </v-btn>
           <v-btn v-if="!draftMode" text>
             <v-icon class="mr-2">mdi-twitter</v-icon> Tweet
@@ -20,8 +20,11 @@
           <v-btn v-if="!draftMode" text>
             <v-icon class="mr-2">link</v-icon> Get sharable link
           </v-btn>
+          <v-btn v-if="!draftMode" text>
+            <v-icon class="mr-2">qr_code_2</v-icon> Generate QR code
+          </v-btn>
           <v-btn v-if="!draftMode" text @click="setDraftMode">
-            <v-icon class="mr-2">create</v-icon> Draft
+            <v-icon class="mr-2">create</v-icon> Edit
           </v-btn>
         </v-row>
 
